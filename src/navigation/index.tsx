@@ -18,17 +18,17 @@ export const AppNavigator = () => {
     <>
       <StatusBar barStyle={barStyle} />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={"Auth"}>
+        <Stack.Navigator initialRouteName={"Main"}>
           <Stack.Screen
-            name={"Auth"}
-            component={AuthNavigator}
+            name={"Main"}
+            component={MainNavigator}
             options={{
               headerShown: false,
             }}
           />
           <Stack.Screen
-            name={"Main"}
-            component={MainNavigator}
+            name={"Auth"}
+            component={AuthNavigator}
             options={{
               headerShown: false,
             }}

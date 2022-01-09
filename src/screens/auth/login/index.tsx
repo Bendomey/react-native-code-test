@@ -14,13 +14,16 @@ export const Login: FC<any> = ({ navigation }) => {
         style={{ flex: 1, backgroundColor: themeColor["background"] }}
       >
         <View style={styles.container}>
-          <KeyboardAwareScrollView>
+          <KeyboardAwareScrollView style={{ paddingTop: RFValue(20) }}>
             <View>
               <Text style={{ fontSize: RFValue(30) }} category="h1">
                 Let's sign you in
               </Text>
               <View style={{ marginTop: RFValue(10) }}>
-                <Text category="s1">Welcome back! You've been missed</Text>
+                <Text category="s1">
+                  You will able to access blogs on the platform when you're
+                  logged in!
+                </Text>
               </View>
             </View>
             <View style={{ marginTop: RFValue(40) }}>
@@ -84,7 +87,7 @@ export const Login: FC<any> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: RFValue(20),
+    paddingHorizontal: RFValue(20),
     justifyContent: "space-between",
   },
   registerContainer: {

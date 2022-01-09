@@ -1,4 +1,6 @@
+import { IBlogPost } from "../../interfaces/blog";
+
 export type MainStackProps = {
   home: undefined;
-  blog: undefined;
+  blog: { data: IBlogPost };
 };

@@ -35,9 +35,10 @@ export const HomeHeader: FC<Props> = ({ logout }) => {
             onPress={logout}
           >
             <Ionicons
-              name="ios-log-out"
-              color={theme["color-danger-600"]}
-              size={RFValue(25)}
+              name="ios-person-circle"
+              // color={theme["background-alternative"]}
+              color={theme["color-primary-600"]}
+              size={RFValue(30)}
             />
           </TouchableOpacity>
         </View>
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: RFValue(20),
+    paddingVertical: RFValue(10),
     paddingHorizontal: RFValue(15),
   },
   headerRight: {
