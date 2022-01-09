@@ -2,11 +2,11 @@ import { ITheme } from "../interfaces/misc";
 
 const lightTheme = {
   background: "#fff",
-  "background-alternative": "dark-content",
+  "background-alternative": "#000",
 };
 const darkTheme = {
   background: "#000",
-  "background-alternative": "light-content",
+  "background-alternative": "#fff",
 };
 
 export const theme = (theme: ITheme) =>

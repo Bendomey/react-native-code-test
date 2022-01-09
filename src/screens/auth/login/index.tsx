@@ -1,24 +1,18 @@
 import { Button, Input, Text, useTheme } from "@ui-kitten/components";
 import {} from "expo-status-bar";
-import React from "react";
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  StatusBar,
-  StatusBarStyle,
-} from "react-native";
+import React, { FC } from "react";
+import { SafeAreaView, View, StyleSheet, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { RFValue } from "react-native-responsive-fontsize";
 
-export const Login = () => {
-  const theme = useTheme();
+export const Login: FC<any> = ({ navigation }) => {
+  const themeColor = useTheme();
 
   return (
     <>
-      <StatusBar barStyle={theme["background-alternative"] as StatusBarStyle} />
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme["background"] }}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: themeColor["background"] }}
+      >
         <View style={styles.container}>
           <KeyboardAwareScrollView>
             <View>
@@ -42,7 +36,7 @@ export const Login = () => {
                   <Text
                     style={{
                       fontSize: RFValue(14),
-                      color: theme["color-basic-600"],
+                      color: themeColor["color-basic-600"],
                     }}
                   >
                     Lost your Password?{" "}
@@ -60,17 +54,26 @@ export const Login = () => {
                 <Text
                   style={{
                     fontSize: RFValue(14),
-                    color: theme["color-basic-600"],
+                    color: themeColor["color-basic-600"],
                   }}
                 >
                   Don't have an account?{" "}
                 </Text>
               </View>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity>
                 <Text>Sign Up</Text>
               </TouchableOpacity>
             </View>
-            <Button size={"large"}>Sign In</Button>
+            <Button
+              size={"large"}
+              onPress={() =>
+                navigation.navigate("Main", {
+                  screen: "home",
+                })
+              }
+            >
+              Sign In
+            </Button>
           </View>
         </View>
       </SafeAreaView>
