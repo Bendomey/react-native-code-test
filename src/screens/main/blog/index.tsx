@@ -37,7 +37,6 @@ export const Blog: FC<any> = ({ route, navigation }) => {
 
     return unsubscribe;
   }, [navigation]);
-  console.log("potision", readPerentage);
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: theme["background"] }}>
@@ -53,9 +52,7 @@ export const Blog: FC<any> = ({ route, navigation }) => {
             }) => {
               const { contentOffset, contentSize } = nativeEvent;
               const { height } = contentSize;
-
               const { y } = contentOffset;
-
               const position = y / height;
               setReadPerentage((prev) => (prev > position ? prev : position));
             }}
