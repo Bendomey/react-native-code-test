@@ -1,3 +1,5 @@
+import { IBlogPost } from "../../interfaces/blog";
+
 export type AuthStackProps = {
-  login: undefined;
+  login: { data?: IBlogPost };
 };

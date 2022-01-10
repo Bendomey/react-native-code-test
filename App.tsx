@@ -11,6 +11,7 @@ import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import React, { useState, useEffect, useRef } from "react";
 import { registerForPushNotificationsAsync } from "./src/services/notification";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

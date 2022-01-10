@@ -8,10 +8,11 @@ import { ThemedView } from "../../../components/View";
 import { Loader } from "../../../components/Loader";
 import { LoginAlert } from "./components/login-alert";
 import { RFValue } from "react-native-responsive-fontsize";
-import { schedulePushNotification } from "../../../services/notification";
+import { useAuthProvider } from "../../../navigation";
 
 export const Home: FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
+  const [{ doSignOut }, { signOut }, state] = useAuthProvider();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -26,11 +27,16 @@ export const Home: FC<any> = ({ navigation }) => {
       <ThemedView style={styles.container}>
         <SafeAreaView>
           <HomeHeader
-            logout={() =>
+            signedIn={state?.userToken}
+            logout={() => {
+              if (state?.userToken) {
+                doSignOut();
+                signOut();
+              }
               navigation.navigate("Auth", {
                 screen: "login",
-              })
-            }
+              });
+            }}
           />
         </SafeAreaView>
 
@@ -55,10 +61,19 @@ export const Home: FC<any> = ({ navigation }) => {
                 <BlogPostCard
                   data={item}
                   onPress={() => {
-                    schedulePushNotification(item);
-                    navigation.push("blog", {
-                      data: item,
-                    });
+                    if (!state.userToken) {
+                      navigation.navigate("Auth", {
+                        screen: "login",
+                        params: {
+                          data: item,
+                        },
+                      });
+                    } else {
+                      navigation.push("blog", {
+                        data: item,
+                      });
+                    }
+                    // schedulePushNotification(item);
                   }}
                 />
               )}

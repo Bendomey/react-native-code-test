@@ -8,9 +8,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface Props {
   logout: () => void;
+  signedIn: any;
 }
 
-export const HomeHeader: FC<Props> = ({ logout }) => {
+export const HomeHeader: FC<Props> = ({ logout, signedIn }) => {
   const theme = useTheme();
   const { handleThemeSwitch } = useThemeProvider();
 
@@ -34,12 +35,20 @@ export const HomeHeader: FC<Props> = ({ logout }) => {
             style={{ marginLeft: RFValue(20) }}
             onPress={logout}
           >
-            <Ionicons
-              name="ios-person-circle"
-              // color={theme["background-alternative"]}
-              color={theme["color-primary-600"]}
-              size={RFValue(30)}
-            />
+            {!signedIn ? (
+              <Ionicons
+                name="ios-person-circle"
+                // color={theme["background-alternative"]}
+                color={theme["color-primary-600"]}
+                size={RFValue(30)}
+              />
+            ) : (
+              <Ionicons
+                name="ios-log-out"
+                color={theme["color-danger-600"]}
+                size={RFValue(30)}
+              />
+            )}
           </TouchableOpacity>
         </View>
       </View>

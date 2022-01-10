@@ -1,12 +1,68 @@
 import { Button, Input, Text, useTheme } from "@ui-kitten/components";
 import {} from "expo-status-bar";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { SafeAreaView, View, StyleSheet, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { RFValue } from "react-native-responsive-fontsize";
+import { useAuthProvider } from "../../../navigation";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import Toast from "react-native-root-toast";
+import { errorMessage } from "../../../services/broker";
+import { IBlogPost } from "../../../interfaces/blog";
+interface ILoginInputs {
+  email: string;
+  password: string;
+}
 
-export const Login: FC<any> = ({ navigation }) => {
+const schema = yup
+  .object({
+    email: yup.string().required(),
+    password: yup.string().required(),
+  })
+  .required();
+
+export const Login: FC<any> = ({ navigation, route }) => {
+  const blog = route.params?.data;
+  console.log(blog);
+
   const themeColor = useTheme();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ILoginInputs>({
+    resolver: yupResolver(schema),
+  });
+  const [{ doSignInWithEmailAndPassword }, { signIn }] = useAuthProvider();
+  const [loading, setLoading] = useState(false);
+
+  const authenticate = async ({ email, password }: ILoginInputs) => {
+    try {
+      setLoading(true);
+      const results = await doSignInWithEmailAndPassword(email, password);
+      await signIn(results.user);
+      if (blog) {
+        navigation.navigate("Main", {
+          screen: "blog",
+          params: { data: blog as IBlogPost },
+        });
+      } else {
+        navigation.navigate("Main", {
+          screen: "home",
+        });
+      }
+    } catch (error: any) {
+      console.log(error);
+
+      Toast.show(errorMessage(error.code) as string, {
+        duration: Toast.durations.LONG,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -25,12 +81,53 @@ export const Login: FC<any> = ({ navigation }) => {
               </View>
             </View>
             <View style={{ marginTop: RFValue(40) }}>
-              <Input
-                size="large"
-                placeholder="Email Address eg. johndoe@gmail.com"
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    size="large"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    placeholder="Email Address eg. johndoe@gmail.com"
+                  />
+                )}
+                name="email"
               />
+              {errors.email && (
+                <Text category="label" style={{ color: "red" }}>
+                  This field is required.
+                </Text>
+              )}
+
               <View style={{ marginTop: RFValue(10) }}>
-                <Input size="large" placeholder="Password eg * * * * * * " />
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      secureTextEntry
+                      value={value}
+                      size="large"
+                      placeholder="Password eg * * * * * * "
+                    />
+                  )}
+                  name="password"
+                />
+                {errors.password && (
+                  <Text category="label" style={{ color: "red" }}>
+                    This field is required.
+                  </Text>
+                )}
               </View>
               <View style={[styles.forgotPassword]}>
                 <View>
@@ -68,13 +165,10 @@ export const Login: FC<any> = ({ navigation }) => {
             <View style={{ marginBottom: RFValue(20) }}>
               <Button
                 size={"large"}
-                onPress={() =>
-                  navigation.navigate("Main", {
-                    screen: "home",
-                  })
-                }
+                disabled={loading}
+                onPress={handleSubmit(authenticate)}
               >
-                Sign In
+                {loading ? "loading..." : "Sign In"}
               </Button>
             </View>
           </SafeAreaView>
