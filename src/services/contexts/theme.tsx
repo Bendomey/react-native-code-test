@@ -32,6 +32,8 @@ export const ThemeProvider: FC = ({ children }) => {
     getTheme();
   }, []);
 
+  console.log(Appearance.getColorScheme());
+
   const handleThemeSwitch = async () => {
     if (theme === "light") {
       setTheme("dark");

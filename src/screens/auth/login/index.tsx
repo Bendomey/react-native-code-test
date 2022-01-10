@@ -10,9 +10,7 @@ export const Login: FC<any> = ({ navigation }) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: themeColor["background"] }}
-      >
+      <View style={{ flex: 1, backgroundColor: themeColor["background"] }}>
         <View style={styles.container}>
           <KeyboardAwareScrollView style={{ paddingTop: RFValue(20) }}>
             <View>
@@ -51,7 +49,7 @@ export const Login: FC<any> = ({ navigation }) => {
               </View>
             </View>
           </KeyboardAwareScrollView>
-          <View>
+          <SafeAreaView>
             <View style={styles.registerContainer}>
               <View>
                 <Text
@@ -67,19 +65,21 @@ export const Login: FC<any> = ({ navigation }) => {
                 <Text>Sign Up</Text>
               </TouchableOpacity>
             </View>
-            <Button
-              size={"large"}
-              onPress={() =>
-                navigation.navigate("Main", {
-                  screen: "home",
-                })
-              }
-            >
-              Sign In
-            </Button>
-          </View>
+            <View style={{ marginBottom: RFValue(20) }}>
+              <Button
+                size={"large"}
+                onPress={() =>
+                  navigation.navigate("Main", {
+                    screen: "home",
+                  })
+                }
+              >
+                Sign In
+              </Button>
+            </View>
+          </SafeAreaView>
         </View>
-      </SafeAreaView>
+      </View>
     </>
   );
 };

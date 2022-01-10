@@ -1,13 +1,14 @@
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
-import { Text, View, Button, Platform } from "react-native";
+import { Platform } from "react-native";
+import { IBlogPost } from "../interfaces/blog";
 
-export async function schedulePushNotification() {
+export async function schedulePushNotification(blog: IBlogPost) {
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "You've got mail! 📬",
-      body: "Here is the notification body",
-      data: { data: "goes here" },
+      title: "You never finished this article!",
+      body: blog.title,
+      data: { data: blog },
     },
     trigger: { seconds: 2 },
   });

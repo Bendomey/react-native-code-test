@@ -10,10 +10,7 @@ import { IBlogPost } from "./src/interfaces/blog";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import React, { useState, useEffect, useRef } from "react";
-import {
-  registerForPushNotificationsAsync,
-  schedulePushNotification,
-} from "./src/services/notification";
+import { registerForPushNotificationsAsync } from "./src/services/notification";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -54,28 +51,28 @@ const App = () => {
     await Promise.all([...imageAssets]);
   };
 
-  // useEffect(() => {
-  //   registerForPushNotificationsAsync().then((token: any) =>
-  //     setExpoPushToken(token)
-  //   );
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token: any) =>
+      setExpoPushToken(token)
+    );
 
-  //   notificationListener.current =
-  //     Notifications.addNotificationReceivedListener((notification: any) => {
-  //       setNotification(notification);
-  //     });
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification: any) => {
+        setNotification(notification);
+      });
 
-  //   responseListener.current =
-  //     Notifications.addNotificationResponseReceivedListener((response) => {
-  //       console.log(response);
-  //     });
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
 
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(
-  //       notificationListener.current
-  //     );
-  //     Notifications.removeNotificationSubscription(responseListener.current);
-  //   };
-  // }, []);
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   if (!isReady && !loaded) {
     // TODO: I will change this to a loader :)

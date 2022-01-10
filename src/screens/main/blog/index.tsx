@@ -40,7 +40,7 @@ const StyledImage: FC<StyledImageProps> = ({ image }) => {
     <View style={styles.container}>
       <Image
         source={{ uri: image }}
-        style={{ flex: 1, borderRadius: 20, height: "100%", width: "100%" }}
+        style={{ flex: 1, borderRadius: 10, height: "100%", width: "100%" }}
       />
     </View>
   );

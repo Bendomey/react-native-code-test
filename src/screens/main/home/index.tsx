@@ -8,6 +8,7 @@ import { ThemedView } from "../../../components/View";
 import { Loader } from "../../../components/Loader";
 import { LoginAlert } from "./components/login-alert";
 import { RFValue } from "react-native-responsive-fontsize";
+import { schedulePushNotification } from "../../../services/notification";
 
 export const Home: FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
@@ -54,6 +55,7 @@ export const Home: FC<any> = ({ navigation }) => {
                 <BlogPostCard
                   data={item}
                   onPress={() => {
+                    schedulePushNotification(item);
                     navigation.push("blog", {
                       data: item,
                     });
