@@ -21,11 +21,12 @@ export const Blog: FC<any> = ({ route, navigation }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", async () => {
-      console.log("readPerentage", readPerentage);
-
       if (readPerentage < 0.7) {
-        let notifId = await schedulePushNotification(route.params.data);
-        await saveToStorage(notifId, route.params.data.title);
+        let getNotif = await getFromStorage(route.params.data.title);
+        if (!getNotif) {
+          let notifId = await schedulePushNotification(route.params.data);
+          await saveToStorage(notifId, route.params.data.title);
+        }
       } else {
         let getNotif = await getFromStorage(route.params.data.title);
         if (getNotif) {
