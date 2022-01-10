@@ -1,5 +1,5 @@
 import { Text, useTheme } from "@ui-kitten/components";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -9,14 +9,56 @@ import {
 } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { ThemedView } from "../../../components/View";
+import {
+  cancelNotification,
+  schedulePushNotification,
+} from "../../../services/notification";
+import { getFromStorage, saveToStorage } from "../../../services/store";
 
-export const Blog: FC<any> = ({ route }) => {
+export const Blog: FC<any> = ({ route, navigation }) => {
   const theme = useTheme();
+  const [readPerentage, setReadPerentage] = useState<number>(0);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", async () => {
+      console.log("readPerentage", readPerentage);
+
+      if (readPerentage < 0.7) {
+        let notifId = await schedulePushNotification(route.params.data);
+        await saveToStorage(notifId, route.params.data.title);
+      } else {
+        let getNotif = await getFromStorage(route.params.data.title);
+        if (getNotif) {
+          cancelNotification(getNotif);
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+  console.log("potision", readPerentage);
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: theme["background"] }}>
         <ThemedView style={{ flex: 1 }}>
-          <ScrollView>
+          <ScrollView
+            onScroll={({
+              nativeEvent,
+            }: {
+              nativeEvent: {
+                contentOffset: { y: number };
+                contentSize: { height: number };
+              };
+            }) => {
+              const { contentOffset, contentSize } = nativeEvent;
+              const { height } = contentSize;
+
+              const { y } = contentOffset;
+
+              const position = y / height;
+              setReadPerentage((prev) => (prev > position ? prev : position));
+            }}
+          >
             <View style={{ padding: RFValue(20) }}>
               <Text category="h1">{route.params.data.title}</Text>
 

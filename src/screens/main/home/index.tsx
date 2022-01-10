@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { SafeAreaView, StyleSheet, View, FlatList, Alert } from "react-native";
 import { HomeHeader } from "./components/header";
 import blogData from "../../../data/blogData.json";
@@ -6,13 +6,17 @@ import { BlogPostCard } from "../../../components/Blog/card";
 import { IBlogPost } from "../../../interfaces/blog";
 import { ThemedView } from "../../../components/View";
 import { Loader } from "../../../components/Loader";
-import { LoginAlert } from "./components/login-alert";
-import { RFValue } from "react-native-responsive-fontsize";
 import { useAuthProvider } from "../../../navigation";
+import { registerForPushNotificationsAsync } from "../../../services/notification";
+import * as Notifications from "expo-notifications";
 
 export const Home: FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [{ doSignOut }, { signOut }, state] = useAuthProvider();
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef<any>();
+  const responseListener = useRef<any>();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,6 +24,31 @@ export const Home: FC<any> = ({ navigation }) => {
     }, 3000);
 
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token: any) =>
+      setExpoPushToken(token)
+    );
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification: any) => {
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        navigation.push("blog", {
+          data: response.notification.request.content.data.data,
+        });
+      });
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
   }, []);
 
   return (
@@ -46,14 +75,14 @@ export const Home: FC<any> = ({ navigation }) => {
           </AlertContainer>
         ) : (
           <>
-            <View
+            {/* <View
               style={{
                 marginBottom: RFValue(10),
                 marginHorizontal: RFValue(15),
               }}
             >
               <LoginAlert />
-            </View>
+            </View> */}
             <FlatList
               contentContainerStyle={styles.body}
               data={(blogData as { blogs: IBlogPost[] })?.blogs}

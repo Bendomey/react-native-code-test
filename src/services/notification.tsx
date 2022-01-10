@@ -4,14 +4,16 @@ import { Platform } from "react-native";
 import { IBlogPost } from "../interfaces/blog";
 
 export async function schedulePushNotification(blog: IBlogPost) {
-  await Notifications.scheduleNotificationAsync({
+  let id = await Notifications.scheduleNotificationAsync({
     content: {
       title: "You never finished this article!",
       body: blog.title,
       data: { data: blog },
     },
-    trigger: { seconds: 2 },
+    trigger: { hour: 3, repeats: false },
   });
+
+  return id;
 }
 
 export async function registerForPushNotificationsAsync() {
@@ -44,4 +46,8 @@ export async function registerForPushNotificationsAsync() {
   }
 
   return token;
+}
+
+export async function cancelNotification(notifId: string) {
+  await Notifications.cancelScheduledNotificationAsync(notifId);
 }
